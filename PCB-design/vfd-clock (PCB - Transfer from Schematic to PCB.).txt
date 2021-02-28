@@ -1,0 +1,15 @@
+Transfer from Schematic to PCB.
+-------------------------------
+
+Report Written:     Thursday, February 25, 2021
+Design Path:        C:\Users\Alex\Documents\personal-projects\tuning-fork-vfd-clock\vfd-clock.pcb
+Design Title:       
+Created:            25/02/2021 23:15:21
+Last Saved:         25/02/2021 23:15:36
+Editing Time:       0 min
+Units:              thou (precision 0)
+
+Net class "Signal" was not defined, but has been created. Please check the values in the PCB design.
+Net class "Power" was not defined, but has been created. Please check the values in the PCB design.
+
+End Of Report.

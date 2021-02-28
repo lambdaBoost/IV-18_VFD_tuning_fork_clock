@@ -1,0 +1,15 @@
+Forward Design Changes Report
+-----------------------------
+
+Report Written:     Saturday, February 27, 2021
+Design Path:        C:\Users\Alex\Documents\personal-projects\tuning-fork-vfd-clock\vfd-clock.pcb
+Design Title:       
+Created:            25/02/2021 23:15:21
+Last Saved:         27/02/2021 21:35:26
+Editing Time:       2782 min
+Units:              thou (precision 0)
+
+Net "N0071" changed from net class "Signal" to net class "Power".
+
+
+End Of Report.

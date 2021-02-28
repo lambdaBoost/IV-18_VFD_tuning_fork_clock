@@ -1,0 +1,77 @@
+Design Rule Check Report
+------------------------
+
+Report Written:     Sunday, February 28, 2021
+Design Path:        C:\Users\Alex\Documents\personal-projects\tuning-fork-vfd-clock\vfd-clock.pcb
+Design Title:       
+Created:            25/02/2021 23:15:21
+Last Saved:         28/02/2021 20:04:06
+Editing Time:       4129 min
+Units:              thou (precision 0)
+
+
+Results
+=======
+
+Pad to Pad Error (P-P) between (15947 9983) and (15947 9991) on Layer "[Top]".
+    Error between Component Pad J1.1 (Net 'VCC') and Component Pad J1.2, Gap is 8 needs to be 10.
+Pad to Pad Error (P-P) between (15947 10008) and (15947 10016) on Layer "[Top]".
+    Error between Component Pad J1.2 and Component Pad J1.3, Gap is 8 needs to be 10.
+Track to Pad Error (T-P) between (15904 9991) and (15904 9974) on Layer "Top Copper".
+    Error between Component Pad J1.2 and Track (Net 'VCC'), Gap is 7 needs to be 10.
+Pad to Pad Error (P-P) between (15947 10034) and (15947 10042) on Layer "[Top]".
+    Error between Component Pad J1.3 and Component Pad J1.4, Gap is 8 needs to be 10.
+Pad to Pad Error (P-P) between (15947 10059) and (15947 10067) on Layer "[Top]".
+    Error between Component Pad J1.4 and Component Pad J1.5 (Net 'GND'), Gap is 8 needs to be 10.
+Track to Pad Error (T-P) between (15925 10059) and (15925 10076) on Layer "Top Copper".
+    Error between Component Pad J1.4 and Track (Net 'GND'), Gap is 7 needs to be 10.
+
+Number of errors found : 6
+
+
+Settings
+========
+
+
+Spacings
+
+=========
+
+Tracks        Yes
+Pads and Vias Yes
+Shapes        No
+Text          No
+Board         Yes
+Drills        Yes
+Components    No
+
+
+Manufacturing
+
+==============
+
+Drill Breakout                  No
+Drill Backoff                   No
+Silkscreen Overlap              No
+Copper Text In Board            No
+Min Track Width                 No
+Min Annular Ring                No
+Min Paste Size                  No
+Vias In Pads                    No
+Unplated Vias                   No
+Unplated Pads With Inner Tracks No
+
+
+Nets
+
+=====
+
+Net Completion               Yes
+Dangling Tracks              Yes
+Net Track Length Differences No
+Nets without Components      No
+Nets on No Connect pins      No
+
+
+
+End Of Report.
