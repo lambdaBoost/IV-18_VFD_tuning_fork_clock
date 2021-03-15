@@ -1,0 +1,17 @@
+Schematic and PCB Check Report
+------------------------------
+
+Report Written:     Monday, March 15, 2021
+Design Path:        C:\Users\Alex\Documents\personal-projects\IN-18_VFD_tuning_fork_clock\PCB-design\vfd-clock.pcb
+Design Title:       
+Created:            25/02/2021 23:15:21
+Last Saved:         15/03/2021 20:40:11
+Editing Time:       7156 min
+Units:              thou (precision 0)
+
+
+Checking integrity of Schematic "C:\Users\Alex\Documents\personal-projects\IN-18_VFD_tuning_fork_clock\PCB-design\vfd-clock.sch" with PCB "C:\Users\Alex\Documents\personal-projects\IN-18_VFD_tuning_fork_clock\PCB-design\vfd-clock.pcb"
+==========================================================================================================================================================================================================================================
+
+
+End Of Report.
