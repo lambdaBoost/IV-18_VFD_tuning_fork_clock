@@ -1,6 +1,6 @@
-int dat=0;
+int dat=2;
 int strobe=1;
-int clk=2;
+int clk=0;
 
 void setup() {
   pinMode(dat, OUTPUT);
