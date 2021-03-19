@@ -13,7 +13,7 @@ const int  buttonPin = A3;    // the pin that the pushbuttons are attached to
 int SRDelayMicros = 1000; //delay between shift register inputs
 
 // Variables will change:
-int pulseCounter = 0;   // counter for the number of button presses
+unsigned long pulseCounter = 0;   // counter for the number of pulses
 int secs = 0;         // current time
 int mins = 0;
 int hrs = 0;
@@ -121,6 +121,7 @@ void loop() {
 
       if(buttonState < 550 and buttonState > 450){
         secs = 0;
+        pulseCounter = 0;
       }
       }
 
@@ -128,34 +129,51 @@ void loop() {
      
   
       displayDigit(digits[loopCounter],loopCounter+1);
-      displayDigit(10,0);//blank all
+      //displayDigit(10,0);//blank all
       loopCounter++;
       if(loopCounter>=8){
         loopCounter = 0;
       }
 
+
+
+
+             //reset count every minute
+       if(pulseCounter >= 26400){
+           secs = 0;
+           mins ++;
+           pulseCounter = 0;
+         } 
+      
+       // increase second count every 440 pulses
+        else if (pulseCounter != 0 and pulseCounter % 440 ==0) {
+              secs++;
+              }
+      
+        else {
+          
+        }
+      
+              
+        if(secs >= 60){
+                secs=0;
+                mins ++;
+              }
+      
+        if(mins >=60){
+                mins=0;
+                hrs ++;
+              }
+      
+       if(hrs >=24){
+                hrs = 0;
+              }
+
     }
   }
 
- // increase second count every 440 pulses
-  if (pulseCounter >=440) {
-        pulseCounter = 0; //TODO - should this actually be 1
-        secs++;
-        if(secs >= 60){
-          secs=0;
-          mins ++;
-        }
 
-        if(mins >=60){
-          mins=0;
-          hrs ++;
-        }
-
-        if(hrs >=24){
-          hrs = 0;
-        }
-
-  } 
+   
 
   
   // save the current state as the last state, for next time through the loop
