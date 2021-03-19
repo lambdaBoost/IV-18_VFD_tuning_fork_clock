@@ -74,6 +74,7 @@ void setup() {
   digitalWrite (strobe, 0);
   digitalWrite (clk, 0);
 
+
 }
 
 unsigned long startTime;
@@ -96,18 +97,18 @@ void loop() {
        //if the current state is HIGH then the clock went from off to on:
 
        if(pulseCounter == 0){
-      pulseCounter++;
+      delay(10000); //let fork 'spin up'
       startTime = millis();
        }
 
        else if(pulseCounter < 10000){
-        pulseCounter ++;
+       
        }
 
        else if (pulseCounter == 10000){
         pulseTime = millis() - startTime;
 
-        pulseCounter ++;
+       
        }
 
        else{
@@ -138,9 +139,11 @@ void loop() {
         
        }
 
-
+      pulseCounter++;
      
     }
+
+    
   }
 
 
