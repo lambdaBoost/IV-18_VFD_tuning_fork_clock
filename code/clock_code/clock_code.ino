@@ -2,6 +2,7 @@
 //IMPORTANT - use 16MHz internal clock. Wouldn;t have thought this would make a difference but it absolutely does!
 
 
+unsigned long frequency = 433.125; //from the frequency calculation script
 int dat=2;
 int strobe=1;
 int clk=0;
@@ -108,8 +109,9 @@ void loop() {
       pulseCounter++;
 
 
-        //check buttons 4 times per second
-      if(pulseCounter %110 ==0){
+        //check buttons 8 times per second
+        //thresholds from test script are 339(top) 687(bottom) 514(both)
+      if(pulseCounter %55 ==0){
       buttonState = analogRead(buttonPin);
       if(buttonState > 300 and buttonState <400){
         hrs++;
@@ -139,14 +141,14 @@ void loop() {
 
 
              //reset count every minute
-       if(pulseCounter >= 26400){
+       if(pulseCounter >= frequency * 60){
            secs = 0;
            mins ++;
            pulseCounter = 0;
          } 
       
-       // increase second count every 440 pulses
-        else if (pulseCounter != 0 and pulseCounter % 440 ==0) {
+       // increase second count every 440 pulses (or so depending on he measured frequency)
+        else if (pulseCounter != 0 and pulseCounter % (int)frequency ==0) {
               secs++;
               }
       
@@ -154,11 +156,12 @@ void loop() {
           
         }
       
-              
+         /*     
         if(secs >= 60){
                 secs=0;
                 mins ++;
               }
+         */
       
         if(mins >=60){
                 mins=0;
