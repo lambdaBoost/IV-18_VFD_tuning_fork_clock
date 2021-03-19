@@ -1,11 +1,21 @@
-//for use on attiny85
-//IMPORTANT - use 16MHz internal clock. Wouldn;t have thought this would make a difference but it absolutely does!
+//code to test frequency of tuning fork
+//to be used on an external arduino
+//connect clock sqout to A2 and gnd to gnd and view result on serial monitor (9600 baud)
 
 
-unsigned long frequency = 437.140; //from the frequency calculation script
 int dat=2;
 int strobe=1;
 int clk=0;
+
+int digit1;
+int digit2;
+int digit3;
+int digit4;
+int digit5;
+int digit6;
+
+float frequency;
+unsigned long frequencyScaled;
 
 // this constant won't change:
 const int  SQPin = A2;    // 
@@ -14,25 +24,22 @@ const int  buttonPin = A3;    // the pin that the pushbuttons are attached to
 int SRDelayMicros = 1000; //delay between shift register inputs
 
 // Variables will change:
-unsigned long pulseCounter = 0;   // counter for the number of pulses
+int pulseCounter = 0;   // counter for the number of button presses
 int secs = 0;         // current time
-int mins = 0;
-int hrs = 0;
 int lastinputState = 0;     // previous state of the button
 int inputState=0;
-int buttonState;
 
 
 byte digit;
 byte digitSelect;
-unsigned long digitArray[13]; //array of segment states
+unsigned long digitArray[12]; //array of segment states
 unsigned long selectArray[8]; //array of digit onoff states
 
 void setup() {
 
   //arrays to switch on vfd. We add the digit and digit select numbers to get final output
   //final output in form C2,C1,Af,C7,C4,C6,C9,Aa,Ab,C8,Ae,Ac,C5,Ad,C3,Adp,Ag,0,0,0
-  //for some reason have to shift them all by one - ie [0] is a buffer. [1] is zero...etc. Literally no idea why, the code looks absolutely fine. Probably some rweird C nonsense.
+  //define arrays - binary
   digitArray[0] = 0b00000000000000000000; //segments abcdef 
   digitArray[1] = 0b00100001101101000000; //segments abcdef
   digitArray[2] = 0b00000000100100000000; //segments bc
@@ -41,11 +48,10 @@ void setup() {
   digitArray[5] = 0b00100000100100001000; //segments bcfg
   digitArray[6] = 0b00100001000101001000; //segments afgcd
   digitArray[7] = 0b00100001001101001000; //segments afgcde
-  digitArray[8] = 0b00000001100100000000; //segments abc
+  digitArray[8] = 0b00000001100100001000; //segments abcg
   digitArray[9] = 0b00100001101101001000; //segments abcdefg
   digitArray[10] = 0b00100001100101001000; //segments abcdfg
   digitArray[11] = 0b00000000000000000000; //blank all
-  digitArray[12] = 0b00000000000000001000; //hyphen
 
   //digit selects. In the order 1-9 going right to left
   selectArray[0] = 0b00000000000000000000;//all off
@@ -69,33 +75,19 @@ void setup() {
   digitalWrite (strobe, 0);
   digitalWrite (clk, 0);
 
+  Serial.begin(9600);
+
+
 }
 
-int loopCounter = 0;
+unsigned long startTime;
+unsigned long pulseTime = 0;
 
 void loop() {
 
   
-  
-  int digit8 = (hrs/10)%10;
-  int digit7 = hrs %10;
-  int digit6 = 11; //flashing hyphen
-  if(secs % 2 ==0){
-    digit6 = 10;
-  }
-  int digit5 = (mins/10)%10;
-  int digit4 = mins %10;
-  int digit3 = 11;
-    if(secs % 2 ==0){
-    digit3 = 10;
-  }
-  int digit2 = (secs/10)%10;
-  int digit1 = secs %10;
 
-
-  int digits[8] = {digit1, digit2,digit3,digit4,digit5,digit6,digit7,digit8};
-
-
+     
   
   //count number of pulses and get second value
   // read the CLOCK input pin:
@@ -106,73 +98,35 @@ void loop() {
     // if the state has changed, increment the counter
     if (inputState == LOW) {
        //if the current state is HIGH then the clock went from off to on:
+
+       if(pulseCounter == 0){
+      delay(10000); //let fork 'spin up'
+      startTime = millis();
+       }
+
+       else if(pulseCounter < 10000){
+       
+       }
+
+       else if (pulseCounter == 10000){
+        pulseTime = millis() - startTime;
+
+       
+       }
+
+       else{
+
+          frequency = 1000.0 * (10000.0 / pulseTime);
+
+          Serial.println(frequency);
+        
+       }
+
       pulseCounter++;
-
-
-        //check buttons 8 times per second
-        //thresholds from test script are 339(top) 687(bottom) 514(both)
-      if(pulseCounter %55 ==0){
-      buttonState = analogRead(buttonPin);
-      if(buttonState > 300 and buttonState <400){
-        hrs++;
-      }
-
-      if(buttonState < 750 and buttonState > 650){
-        mins++;
-      }
-
-      if(buttonState < 550 and buttonState > 450){
-        secs = 0;
-        pulseCounter = 0;
-      }
-      }
-
-
      
-  
-      displayDigit(digits[loopCounter],loopCounter+1);
-      //displayDigit(10,0);//blank all
-      loopCounter++;
-      if(loopCounter>=8){
-        loopCounter = 0;
-      }
-
-
-
-
-             //reset count every minute
-       if(pulseCounter >= frequency * 60.0){
-           secs = 0;
-           mins ++;
-           pulseCounter = 0;
-         } 
-      
-       // increase second count every 440 pulses (or so depending on he measured frequency)
-        else if (pulseCounter != 0 and pulseCounter % (int)frequency ==0) {
-              secs++;
-              }
-      
-        else {
-          
-        }
-      
-         /*     
-        if(secs >= 60){
-                secs=0;
-                mins ++;
-              }
-         */
-      
-        if(mins >=60){
-                mins=0;
-                hrs ++;
-              }
-      
-       if(hrs >=24){
-                hrs = 0;
-              }
-
     }
+
+    
   }
 
 
@@ -184,6 +138,7 @@ void loop() {
 
 
 
+
 }
 
 
@@ -192,14 +147,19 @@ void loop() {
 
 
 
-void displayDigit(int digit, int posn){
+void displayDigit(int digit, int posn, bool DP){
 
 
   unsigned long digitOut = digitArray[digit + 1];
   unsigned long posnOut = selectArray[posn];
   
-    //assignments in the order C2,C1,Af,C7,C4,C6,C9,Aa,Ab,C8,Ae,Ac,C5,Ad,C3,C8,Adp,Ag,0,0
+
   unsigned long selectOut = digitOut + posnOut;
+
+  //add DP if needed
+  if(DP == true){
+    selectOut = selectOut + 0b00000000000000010000;
+  }
 
   // write time to VFD
 
@@ -216,9 +176,11 @@ void displayDigit(int digit, int posn){
 
      
    // Turn on the outputs
+
    digitalWrite(strobe, HIGH);
    delayMicroseconds(4);
-   digitalWrite(strobe, LOW);  
+   digitalWrite(strobe, LOW); 
+ 
 
 }
 

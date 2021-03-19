@@ -1,5 +1,8 @@
-//should use on a controller with an external clock for accurate reading
 //code to test frequency of tuning fork
+//can be run in situ using the ATtiny internal oscillator as a reference.
+//attiny internal closk isnt very good so doesnt give great result
+//should use the other test script on a controller with an external clock for accurate reading
+
 
 
 int dat=2;
