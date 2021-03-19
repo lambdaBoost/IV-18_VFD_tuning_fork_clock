@@ -141,7 +141,7 @@ void loop() {
 
 
              //reset count every minute
-       if(pulseCounter >= frequency * 60){
+       if(pulseCounter >= frequency * 60.0){
            secs = 0;
            mins ++;
            pulseCounter = 0;
