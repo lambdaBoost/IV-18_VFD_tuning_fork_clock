@@ -20,25 +20,26 @@ int inputState=0;
 
 byte digit;
 byte digitSelect;
-unsigned long digitArray[11]; //array of segment states
+unsigned long digitArray[12]; //array of segment states
 unsigned long selectArray[8]; //array of digit onoff states
 
 void setup() {
 
   //arrays to switch on vfd. We add the digit and digit select numbers to get final output
   //final output in form C2,C1,Af,C7,C4,C6,C9,Aa,Ab,C8,Ae,Ac,C5,Ad,C3,Adp,Ag,0,0,0
-  //define arrays - binary 
-  digitArray[0] = 0b00100001101101000000; //segments abcdef
-  digitArray[1] = 0b00000000100100000000; //segments bc
-  digitArray[2] = 0b00000001101001001000; //segments abged
-  digitArray[3] = 0b00000001100101001000; //segments abgcd
-  digitArray[4] = 0b00100000100100001000; //segments bcfg
-  digitArray[5] = 0b00100001000101001000; //segments afgcd
-  digitArray[6] = 0b00100001001101001000; //segments afgcde
-  digitArray[7] = 0b00000001100100001000; //segments abcg
-  digitArray[8] = 0b00100001101101001000; //segments abcdefg
-  digitArray[9] = 0b00100001100101001000; //segments abcdfg
-  digitArray[10] = 0b00000000000000000000; //blank all
+  //define arrays - binary
+  digitArray[0] = 0b00000000000000000000; //segments abcdef 
+  digitArray[1] = 0b00100001101101000000; //segments abcdef
+  digitArray[2] = 0b00000000100100000000; //segments bc
+  digitArray[3] = 0b00000001101001001000; //segments abged
+  digitArray[4] = 0b00000001100101001000; //segments abgcd
+  digitArray[5] = 0b00100000100100001000; //segments bcfg
+  digitArray[6] = 0b00100001000101001000; //segments afgcd
+  digitArray[7] = 0b00100001001101001000; //segments afgcde
+  digitArray[8] = 0b00000001100100001000; //segments abcg
+  digitArray[9] = 0b00100001101101001000; //segments abcdefg
+  digitArray[10] = 0b00100001100101001000; //segments abcdfg
+  digitArray[11] = 0b00000000000000000000; //blank all
 
   //digit selects. In the order 1-9 going right to left
   selectArray[0] = 0b00000000000000000000;//all off
@@ -86,7 +87,7 @@ void loop() {
       displayDigit(digit1,5);
       displayDigit(digit2,4);
       displayDigit(digit3,3);
-      displayDigit(0,0);//blank all
+      displayDigit(10,0);//blank all
 
     }
   }
@@ -118,7 +119,7 @@ void loop() {
 void displayDigit(int digit, int posn){
 
 
-  unsigned long digitOut = digitArray[digit];
+  unsigned long digitOut = digitArray[digit + 1];
   unsigned long posnOut = selectArray[posn];
   
     //assignments in the order C2,C1,Af,C7,C4,C6,C9,Aa,Ab,C8,Ae,Ac,C5,Ad,C3,C8,Adp,Ag,0,0
