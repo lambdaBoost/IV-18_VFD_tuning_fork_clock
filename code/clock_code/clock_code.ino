@@ -7,20 +7,24 @@ int strobe=1;
 int clk=0;
 
 // this constant won't change:
-const int  SQPin = A2;    // the pin that the pushbutton is attached to
+const int  SQPin = A2;    // 
+const int  buttonPin = A3;    // the pin that the pushbuttons are attached to
 
 int SRDelayMicros = 1000; //delay between shift register inputs
 
 // Variables will change:
 int pulseCounter = 0;   // counter for the number of button presses
 int secs = 0;         // current time
+int mins = 0;
+int hrs = 0;
 int lastinputState = 0;     // previous state of the button
 int inputState=0;
+int buttonState;
 
 
 byte digit;
 byte digitSelect;
-unsigned long digitArray[12]; //array of segment states
+unsigned long digitArray[13]; //array of segment states
 unsigned long selectArray[8]; //array of digit onoff states
 
 void setup() {
@@ -40,6 +44,7 @@ void setup() {
   digitArray[9] = 0b00100001101101001000; //segments abcdefg
   digitArray[10] = 0b00100001100101001000; //segments abcdfg
   digitArray[11] = 0b00000000000000000000; //blank all
+  digitArray[12] = 0b00000000000000001000; //hyphen
 
   //digit selects. In the order 1-9 going right to left
   selectArray[0] = 0b00000000000000000000;//all off
@@ -65,8 +70,30 @@ void setup() {
 
 }
 
+int loopCounter = 0;
 
 void loop() {
+
+  
+  
+  int digit8 = (hrs/10)%10;
+  int digit7 = hrs %10;
+  int digit6 = 11; //flashing hyphen
+  if(secs % 2 ==0){
+    digit6 = 10;
+  }
+  int digit5 = (mins/10)%10;
+  int digit4 = mins %10;
+  int digit3 = 11;
+    if(secs % 2 ==0){
+    digit3 = 10;
+  }
+  int digit2 = (secs/10)%10;
+  int digit1 = secs %10;
+
+
+  int digits[8] = {digit1, digit2,digit3,digit4,digit5,digit6,digit7,digit8};
+
 
   
   //count number of pulses and get second value
@@ -80,14 +107,32 @@ void loop() {
        //if the current state is HIGH then the clock went from off to on:
       pulseCounter++;
 
-      int digit1 = (secs/100)%10;
-      int digit2 = (secs/10) %10;
-      int digit3 = secs %10;
+
+        //check buttons 4 times per second
+      if(pulseCounter %110 ==0){
+      buttonState = analogRead(buttonPin);
+      if(buttonState > 300 and buttonState <400){
+        hrs++;
+      }
+
+      if(buttonState < 750 and buttonState > 650){
+        mins++;
+      }
+
+      if(buttonState < 550 and buttonState > 450){
+        secs = 0;
+      }
+      }
+
+
+     
   
-      displayDigit(digit1,5);
-      displayDigit(digit2,4);
-      displayDigit(digit3,3);
+      displayDigit(digits[loopCounter],loopCounter+1);
       displayDigit(10,0);//blank all
+      loopCounter++;
+      if(loopCounter>=8){
+        loopCounter = 0;
+      }
 
     }
   }
@@ -98,6 +143,16 @@ void loop() {
         secs++;
         if(secs >= 60){
           secs=0;
+          mins ++;
+        }
+
+        if(mins >=60){
+          mins=0;
+          hrs ++;
+        }
+
+        if(hrs >=24){
+          hrs = 0;
         }
 
   } 
