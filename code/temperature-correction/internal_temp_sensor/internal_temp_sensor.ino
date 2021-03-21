@@ -1,12 +1,11 @@
-//for use on attiny85
-//IMPORTANT - use 8MHz internal clock. Wouldn;t have thought this would make a difference but it absolutely does!
-//8mhz clock required for temperature readings too
+//displays chip temp to vfd to use for callibration (in conjunction with the mega frequency test script)
+//performs pulse counting to 30 secs to warm up chip then displays temp
 
-
-unsigned long frequency = 437.140; //from the frequency calculation script
 int dat=2;
 int strobe=1;
 int clk=0;
+
+int frequency = 440;
 
 // this constant won't change:
 const int  SQPin = A2;    // 
@@ -29,8 +28,9 @@ byte digitSelect;
 unsigned long digitArray[13]; //array of segment states
 unsigned long selectArray[8]; //array of digit onoff states
 
-void setup() {
+int temp;
 
+void setup() {
 
   //arrays to switch on vfd. We add the digit and digit select numbers to get final output
   //final output in form C2,C1,Af,C7,C4,C6,C9,Aa,Ab,C8,Ae,Ac,C5,Ad,C3,Adp,Ag,0,0,0
@@ -73,32 +73,16 @@ void setup() {
 
 }
 
-int loopCounter = 0;
 
-void loop() {
+bool tempRead = false;
 
-  
-  
-  int digit8 = (hrs/10)%10;
-  int digit7 = hrs %10;
-  int digit6 = 11; //flashing hyphen
-  if(secs % 2 ==0){
-    digit6 = 10;
-  }
-  int digit5 = (mins/10)%10;
-  int digit4 = mins %10;
-  int digit3 = 11;
-    if(secs % 2 ==0){
-    digit3 = 10;
-  }
-  int digit2 = (secs/10)%10;
-  int digit1 = secs %10;
+void loop()
+{
 
 
-  int digits[8] = {digit1, digit2,digit3,digit4,digit5,digit6,digit7,digit8};
+  if( millis() < 30000){
 
-
-  
+      
   //count number of pulses and get second value
   // read the CLOCK input pin:
   inputState = digitalRead(SQPin);
@@ -129,15 +113,6 @@ void loop() {
       }
       }
 
-
-     
-  
-      displayDigit(digits[loopCounter],loopCounter+1);
-      //displayDigit(10,0);//blank all
-      loopCounter++;
-      if(loopCounter>=8){
-        loopCounter = 0;
-      }
 
 
 
@@ -176,62 +151,40 @@ void loop() {
 
     }
   }
+    
+  }
 
 
-   
+  else if(tempRead == false){
+    temp = getTempandVcc(true);
+    tempRead = true;
+  }
+
+  else{
+
 
   
-  // save the current state as the last state, for next time through the loop
-  lastinputState = inputState;
-
-
-
-}
-
-
-
-
-
-
-
-void displayDigit(int digit, int posn){
-
-
-  unsigned long digitOut = digitArray[digit + 1];
-  unsigned long posnOut = selectArray[posn];
+  // Show the temp reading from the ADC
+  int digit4 = (temp/1000)%10;
+  int digit3 = (temp/100) %10;
+  int digit2 = (temp/10)%10;
+  int digit1 = (temp) %10;
   
-    //assignments in the order C2,C1,Af,C7,C4,C6,C9,Aa,Ab,C8,Ae,Ac,C5,Ad,C3,C8,Adp,Ag,0,0
-  unsigned long selectOut = digitOut + posnOut;
 
-  // write time to VFD
+  displayDigit(digit4,4);
+  delay(1);
+  displayDigit(digit3,3);
+  delay(1);
+  displayDigit(digit2,2);
+  delay(1);
+  displayDigit(digit1,1);
+  delay(1);
 
-    //write position
-     for (int i = 19; i >= 0; i--)
-   {
-    int datOut = bitRead(selectOut,i);
-       digitalWrite(dat, datOut);
-       digitalWrite(clk, HIGH);
-       delayMicroseconds(4);
-       digitalWrite(clk, LOW);
-       delayMicroseconds(4);     
-   }
+  }
+  
 
-     
-   // Turn on the outputs
-   digitalWrite(strobe, HIGH);
-   delayMicroseconds(4);
-   digitalWrite(strobe, LOW);  
-
+  
 }
-
-
-
-
-
-
-
-
-
 
 ////////////functions to read chip temp and vcc
 
@@ -303,4 +256,36 @@ float getTempandVcc(bool temp) {
 
 
 
+
+
+
+
+void displayDigit(int digit, int posn){
+
+
+  unsigned long digitOut = digitArray[digit + 1];
+  unsigned long posnOut = selectArray[posn];
   
+    //assignments in the order C2,C1,Af,C7,C4,C6,C9,Aa,Ab,C8,Ae,Ac,C5,Ad,C3,C8,Adp,Ag,0,0
+  unsigned long selectOut = digitOut + posnOut;
+
+  // write time to VFD
+
+    //write position
+     for (int i = 19; i >= 0; i--)
+   {
+    int datOut = bitRead(selectOut,i);
+       digitalWrite(dat, datOut);
+       digitalWrite(clk, HIGH);
+       delayMicroseconds(4);
+       digitalWrite(clk, LOW);
+       delayMicroseconds(4);     
+   }
+
+     
+   // Turn on the outputs
+   digitalWrite(strobe, HIGH);
+   delayMicroseconds(4);
+   digitalWrite(strobe, LOW);  
+
+}
