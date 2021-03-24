@@ -180,6 +180,10 @@ void loop()
   displayDigit(digit1,1);
   delay(1);
 
+  if((millis()/1000) %60 ==0){
+    temp = getTempandVcc(true);
+  }
+
   }
   
 
@@ -191,8 +195,8 @@ void loop()
 // Calibration of the temperature sensor has to be changed for your own ATtiny85
 // per tech note: http://www.atmel.com/Images/doc8108.pdf
 float chipTemp(float raw) {
-  const float chipTempOffset = 272.9;           // Your value here, it may vary
-  const float chipTempCoeff = 1.075;            // Your value here, it may vary
+  const float chipTempOffset = 0;           // Your value here, it may vary
+  const float chipTempCoeff = 1;            // Your value here, it may vary
   return ((raw - chipTempOffset) / chipTempCoeff);
 }
 
@@ -215,7 +219,7 @@ float getTempandVcc(bool temp) {
   // Measure temperature
   ADCSRA |= _BV(ADEN);           // Enable AD and start conversion
   ADMUX = 0xF | _BV( REFS1 );    // ADC4 (Temp Sensor) and Ref voltage = 1.1V;
-  delay(100);                    // Settling time min 1 ms, wait 100 ms
+  delay(1);                    // Settling time min 1 ms
 
   rawTemp = (float)getADC();     // use next sample as initial average
   for (int i = 2; i < 2000; i++) { // calculate running average for 2000 measurements
@@ -228,8 +232,7 @@ float getTempandVcc(bool temp) {
   ADCSRA |= _BV(ADEN);   // Enable ADC
   ADMUX  = 0x0c | _BV(REFS2);    // Use Vcc as voltage reference,
   //    bandgap reference as ADC input
-  delay(100);                    // Settling time min 1 ms, there is
-  //    time so wait 100 ms
+  delay(1);                    // Settling time min 1 ms
   rawVcc = (float)getADC();      // use next sample as initial average
   for (int i = 2; i < 2000; i++) { // calculate running average for 2000 measurements
     rawVcc += ((float)getADC() - rawVcc) / float(i);

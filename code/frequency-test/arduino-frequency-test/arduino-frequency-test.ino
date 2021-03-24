@@ -24,7 +24,7 @@ const int  buttonPin = A3;    // the pin that the pushbuttons are attached to
 int SRDelayMicros = 1000; //delay between shift register inputs
 
 // Variables will change:
-int pulseCounter = 0;   // counter for the number of button presses
+unsigned long pulseCounter = 0;   //
 int secs = 0;         // current time
 int lastinputState = 0;     // previous state of the button
 int inputState=0;
@@ -100,25 +100,30 @@ void loop() {
        //if the current state is HIGH then the clock went from off to on:
 
        if(pulseCounter == 0){
+      Serial.println("starting count");
       delay(10000); //let fork 'spin up'
       startTime = millis();
        }
 
-       else if(pulseCounter < 10000){
+       else if(pulseCounter < 100000){
        
        }
 
-       else if (pulseCounter == 10000){
+       else if (pulseCounter == 100000){
         pulseTime = millis() - startTime;
+        Serial.println("count done");
+        frequency = 1000.0 * (100000.0 / pulseTime);
+
+        Serial.println(frequency, 4);
 
        
        }
 
        else{
 
-          frequency = 1000.0 * (10000.0 / pulseTime);
+          frequency = 1000.0 * (100000.0 / pulseTime);
 
-          Serial.println(frequency);
+          Serial.println(frequency, 4);
         
        }
 
