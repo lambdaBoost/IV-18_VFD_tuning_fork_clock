@@ -3,7 +3,7 @@
 //8mhz clock required for temperature readings too
 
 
-unsigned long frequency = 437.5; //from the frequency calculation script
+unsigned long frequency = 437.6; //frequency at room temp (from frequency calculation script) - corrected hourly with the on chip temp reading
 int dat=2;
 int strobe=1;
 int clk=0;
@@ -120,10 +120,12 @@ void loop() {
       buttonState = analogRead(buttonPin);
       if(buttonState > 300 and buttonState <400){
         hrs++;
+        bool firstHrPassed = false;
       }
 
       if(buttonState < 750 and buttonState > 650){
         mins++;
+        bool firstHrPassed = false;
       }
 
       if(buttonState < 550 and buttonState > 450){
