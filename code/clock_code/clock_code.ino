@@ -120,12 +120,12 @@ void loop() {
       buttonState = analogRead(buttonPin);
       if(buttonState > 300 and buttonState <400){
         hrs++;
-        bool firstHrPassed = false;
+        firstHrPassed = false;
       }
 
       if(buttonState < 750 and buttonState > 650){
         mins++;
-        bool firstHrPassed = false;
+        firstHrPassed = false;
       }
 
       if(buttonState < 550 and buttonState > 450){
@@ -148,7 +148,7 @@ void loop() {
 
 
         //reset count every hour
-       if(pulseCounter >= frequency * 60.0 * 60){
+       if(pulseCounter >= frequency * 60.0 * 60.0){
            secs = 0;
            mins =0;
            hrs++;
@@ -161,7 +161,7 @@ void loop() {
        //reset count on first hour pass
        else if(mins >= 60 and firstHrPassed == false){
            secs = 0;
-           mins =0;
+           mins = 0;
            hrs++;
            pulseCounter = 0;
            firstHrPassed = true;
@@ -183,8 +183,8 @@ void loop() {
                 mins ++;
               }
          
-      /*
-        if(mins >=60){
+      
+        /*if(mins >=60){
                 firstHrPassed = true;
                 mins=0;
                 hrs ++;
