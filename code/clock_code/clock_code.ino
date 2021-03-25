@@ -29,6 +29,9 @@ byte digitSelect;
 unsigned long digitArray[13]; //array of segment states
 unsigned long selectArray[8]; //array of digit onoff states
 
+bool firstHrPassed = false; //records if first hour has passed so first pulse count reset can be performed
+int temp; //raw chip temperature
+
 void setup() {
 
 
@@ -142,12 +145,26 @@ void loop() {
 
 
 
-             //reset count every minute
-       if(pulseCounter >= frequency * 60.0){
+        //reset count every hour
+       if(pulseCounter >= frequency * 60.0 * 60){
            secs = 0;
-           mins ++;
+           mins =0;
+           hrs++;
            pulseCounter = 0;
-         } 
+
+           temp = getTempandVcc(true);
+           frequency = 440.82 - (0.0004*temp); //from frequency callibration process - assumes linear relationship
+         }
+
+       //reset count on first hour pass
+       else if(mins >= 60 and firstHrPassed == false){
+           secs = 0;
+           mins =0;
+           hrs++;
+           pulseCounter = 0;
+           firstHrPassed = true;
+           
+       }
       
        // increase second count every 440 pulses (or so depending on he measured frequency)
         else if (pulseCounter != 0 and pulseCounter % (int)frequency ==0) {
@@ -158,17 +175,19 @@ void loop() {
           
         }
       
-         /*     
+             
         if(secs >= 60){
                 secs=0;
                 mins ++;
               }
-         */
-      
+         
+      /*
         if(mins >=60){
+                firstHrPassed = true;
                 mins=0;
                 hrs ++;
               }
+       */
       
        if(hrs >=24){
                 hrs = 0;
